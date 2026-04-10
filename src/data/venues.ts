@@ -12,6 +12,10 @@ export interface Neighborhood {
   name: string;
   blurb: string;
   bestFor: string[];
+  accent: string;
+  tint: string;
+  deep: string;
+  heroNote: string;
 }
 
 export interface Venue {
@@ -40,30 +44,50 @@ export const neighborhoods: Neighborhood[] = [
     name: "Gueliz",
     blurb: "Modern cafés, brunch spots, remote-work tables, and all-day casual dining.",
     bestFor: ["coffee", "brunch", "work-friendly", "casual dinners"],
+    accent: "#D38A53",
+    tint: "#FBE9D7",
+    deep: "#6E472B",
+    heroNote: "For polished cafés and daytime energy.",
   },
   {
     slug: "medina",
     name: "Medina",
     blurb: "Rooftops, traditional plates, tea stops, and tourist-heavy discovery.",
     bestFor: ["rooftops", "traditional", "views", "tourist-friendly"],
+    accent: "#C96E4B",
+    tint: "#F7DFD5",
+    deep: "#6F3125",
+    heroNote: "For rooftops, tajines, and old-city charm.",
   },
   {
     slug: "hivernage",
     name: "Hivernage",
     blurb: "Upscale lounges, stylish dining, and polished evening spots.",
     bestFor: ["date night", "upscale", "cocktail vibe", "late dinners"],
+    accent: "#0F6B5E",
+    tint: "#DEF2EC",
+    deep: "#0B443B",
+    heroNote: "For dressed-up dinners and evening plans.",
   },
   {
     slug: "agdal",
     name: "Agdal",
     blurb: "Easy local hangouts, practical food options, and affordable everyday venues.",
     bestFor: ["local favorite", "value", "family-friendly", "daily food runs"],
+    accent: "#D29A2E",
+    tint: "#F9EDCC",
+    deep: "#705314",
+    heroNote: "For easy breakfasts and everyday value.",
   },
   {
     slug: "sidi-ghanem",
     name: "Sidi Ghanem",
     blurb: "Creative district energy with design-forward cafés and workshop-style kitchens.",
     bestFor: ["creative crowd", "industrial vibe", "slow mornings", "curated spots"],
+    accent: "#8B63D8",
+    tint: "#EEE7FF",
+    deep: "#4A317A",
+    heroNote: "For curated spaces and creative crowd energy.",
   },
 ];
 
@@ -317,3 +341,10 @@ export function getVenueMapsUrl(venue: Venue) {
   return mapsSearch(venue.name);
 }
 
+export function formatNeighborhood(slug: NeighborhoodSlug) {
+  return slug.replace(/-/g, " ");
+}
+
+export function getNeighborhoodCount(slug: NeighborhoodSlug) {
+  return venues.filter((venue) => venue.neighborhood === slug).length;
+}

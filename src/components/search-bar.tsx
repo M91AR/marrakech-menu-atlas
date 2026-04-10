@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { Search } from "lucide-react";
 
 export function SearchBar({ compact = false }: { compact?: boolean }) {
   const router = useRouter();
@@ -16,23 +17,24 @@ export function SearchBar({ compact = false }: { compact?: boolean }) {
   return (
     <form
       onSubmit={submit}
-      className={`flex w-full flex-col gap-3 rounded-[1.75rem] border border-white/10 bg-white/6 p-3 backdrop-blur sm:flex-row ${
+      className={`surface-card flex w-full flex-col gap-3 rounded-[1.8rem] p-3 sm:flex-row ${
         compact ? "max-w-3xl" : "max-w-4xl"
       }`}
     >
-      <input
-        value={query}
-        onChange={(event) => setQuery(event.target.value)}
-        placeholder="Search brunch, rooftop, coffee, Medina..."
-        className="h-14 flex-1 rounded-[1.2rem] border border-white/10 bg-black/15 px-5 text-sm text-white outline-none placeholder:text-white/40"
-      />
-      <button
-        type="submit"
-        className="h-14 rounded-[1.2rem] bg-[#f2b66d] px-6 text-sm font-semibold text-slate-950 transition hover:brightness-105"
-      >
+      <label className="relative flex-1">
+        <Search className="pointer-events-none absolute left-4 top-1/2 size-5 -translate-y-1/2 text-[var(--muted)]" />
+        <span className="sr-only">Search venues</span>
+        <input
+          value={query}
+          onChange={(event) => setQuery(event.target.value)}
+          placeholder="Search brunch, rooftop, coffee, Medina..."
+          className="field-input pl-12"
+        />
+      </label>
+
+      <button type="submit" className="btn-primary h-[3.4rem] px-6 text-sm sm:px-7">
         Explore Marrakech
       </button>
     </form>
   );
 }
-
