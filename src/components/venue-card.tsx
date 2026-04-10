@@ -11,6 +11,7 @@ import { formatNeighborhood, getNeighborhood, getVenueTypeLabel, type Venue } fr
 export function VenueCard({ venue }: { venue: Venue }) {
   const neighborhood = getNeighborhood(venue.neighborhood);
   const { locale, isArabic } = useLocale();
+  const hasRealMenuSnapshot = venue.menuHighlights.some((item) => item.price !== "—");
 
   return (
     <Link href={`/venues/${venue.slug}`} className="group block rounded-[1.75rem] transition duration-300 hover:-translate-y-1">
@@ -56,16 +57,24 @@ export function VenueCard({ venue }: { venue: Venue }) {
 
           <div className="mt-6 rounded-[1.2rem] border border-[var(--line)] bg-[var(--paper-soft)] p-4">
             <div className="mb-3 text-xs font-semibold uppercase tracking-[0.18em] text-[var(--muted)]">
-              {isArabic ? "لقطة من القائمة" : "Menu snapshot"}
+              {hasRealMenuSnapshot ? (isArabic ? "لقطة من القائمة" : "Menu snapshot") : isArabic ? "حالة البيانات" : "Data status"}
             </div>
-            <div className="space-y-2">
-              {venue.menuHighlights.slice(0, 2).map((item) => (
-                <div key={item.name.en} className="flex items-center justify-between gap-3 text-sm text-[var(--ink)]">
-                  <span>{getLocalizedString(item.name, locale)}</span>
-                  <span className="font-semibold text-[var(--accent-strong)]">{item.price}</span>
-                </div>
-              ))}
-            </div>
+            {hasRealMenuSnapshot ? (
+              <div className="space-y-2">
+                {venue.menuHighlights.slice(0, 2).map((item) => (
+                  <div key={item.name.en} className="flex items-center justify-between gap-3 text-sm text-[var(--ink)]">
+                    <span>{getLocalizedString(item.name, locale)}</span>
+                    <span className="font-semibold text-[var(--accent-strong)]">{item.price}</span>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-sm leading-7 text-[var(--muted)]">
+                {isArabic
+                  ? "تمت إضافة هذا المكان الحقيقي من مصادر ويب عامة. استيراد القائمة الحية يأتي لاحقاً."
+                  : "This real venue was added from public web sources. Live menu import comes next."}
+              </p>
+            )}
           </div>
 
           <div className="mt-5 flex flex-wrap gap-4 text-sm text-[var(--muted)]">

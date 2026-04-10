@@ -26,6 +26,7 @@ import {
 export function VenuePageClient({ venue }: { venue: Venue }) {
   const { isArabic, locale } = useLocale();
   const neighborhood = getNeighborhood(venue.neighborhood);
+  const hasRealMenuSnapshot = venue.menuHighlights.some((item) => item.price !== "—");
 
   return (
     <main className="mx-auto flex w-full max-w-6xl flex-1 flex-col px-6 pb-20 pt-8 lg:px-8">
@@ -115,14 +116,22 @@ export function VenuePageClient({ venue }: { venue: Venue }) {
       <div className="mt-8 grid gap-6 lg:grid-cols-[1fr_0.92fr]">
         <section className="surface-card rounded-[2.1rem] p-6 lg:p-7">
           <div className="section-label">{isArabic ? "لقطة من القائمة" : "Menu snapshot"}</div>
-          <div className="mt-5 grid gap-3">
-            {venue.menuHighlights.map((item) => (
-              <div key={item.name.en} className="flex items-center justify-between gap-4 rounded-[1.3rem] bg-white/70 px-4 py-4 text-sm text-[var(--ink)] shadow-[inset_0_1px_0_rgba(255,255,255,0.85)]">
-                <span>{getLocalizedString(item.name, locale)}</span>
-                <span className="font-semibold text-[var(--accent-strong)]">{item.price}</span>
-              </div>
-            ))}
-          </div>
+          {hasRealMenuSnapshot ? (
+            <div className="mt-5 grid gap-3">
+              {venue.menuHighlights.map((item) => (
+                <div key={item.name.en} className="flex items-center justify-between gap-4 rounded-[1.3rem] bg-white/70 px-4 py-4 text-sm text-[var(--ink)] shadow-[inset_0_1px_0_rgba(255,255,255,0.85)]">
+                  <span>{getLocalizedString(item.name, locale)}</span>
+                  <span className="font-semibold text-[var(--accent-strong)]">{item.price}</span>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="mt-5 rounded-[1.3rem] border border-[var(--line)] bg-[var(--paper-soft)] px-4 py-4 text-sm leading-7 text-[var(--muted)]">
+              {isArabic
+                ? "المكان حقيقي وتمت إضافته من مصادر ويب عامة حتى ترى شكل الدليل على حجم أكبر. التحقق الحي من القوائم والأسعار يأتي في المرحلة التالية."
+                : "This is a real venue added from public web sources so the guide can be previewed at a more realistic scale. Live menu and price verification come next."}
+            </div>
+          )}
           <div className="mt-5 rounded-[1.5rem] bg-[rgba(20,165,140,0.12)] px-4 py-4 text-sm leading-7 text-[var(--green)]">
             {isArabic
               ? "وعد feen: تحديث القوائم والطوابع الزمنية جزء أساسي من المنتج، لا تفصيل ثانوي."
