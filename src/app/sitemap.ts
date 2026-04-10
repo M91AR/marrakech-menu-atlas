@@ -9,6 +9,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
   return [
     "",
     "/listings",
+    "/account",
+    "/admin",
     "/claim",
     ...neighborhoods.map((item) => `/neighborhood/${item.slug}`),
     ...venues.map((venue) => `/venues/${venue.slug}`),
@@ -19,4 +21,3 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: path === "" ? 1 : 0.7,
   }));
 }
-

@@ -4,11 +4,14 @@ Private preview build for **feen.ma**, a menu-first dining guide starting with M
 
 ## What is included
 
-- Homepage
-- Listings page with filters
+- Bilingual homepage (English + Arabic)
+- Listings page with bilingual filters and search
 - Neighborhood pages
 - Individual venue pages
+- User account preview page
+- Admin workspace preview page
 - Owner claim page
+- Local saved-venues behavior for the preview account
 - Static export compatible with GitHub Pages
 
 ## Stack
@@ -49,4 +52,5 @@ The workflow builds the site and deploys it to GitHub Pages using the repository
 ## Notes
 
 - Current listings are a **preview dataset**, not a live verified database yet
-- The next version should add a real database, owner claims, uploads, and verification workflows
+- Account and admin flows are implemented as a polished front-end preview with browser-local state
+- The next version should wire real auth, roles, claims, uploads, and verification workflows to a live backend

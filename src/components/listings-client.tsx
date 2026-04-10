@@ -1,13 +1,21 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { Filter, RotateCcw } from "lucide-react";
+import { Filter, RotateCcw, Sparkles } from "lucide-react";
 import { useSearchParams } from "next/navigation";
-import { neighborhoods, venues } from "@/data/venues";
+import { useLocale } from "@/components/locale-provider";
 import { VenueCard } from "@/components/venue-card";
+import { getLocalizedString } from "@/lib/i18n";
+import {
+  formatNeighborhood,
+  getVenueSearchText,
+  neighborhoods,
+  venues,
+} from "@/data/venues";
 
 export function ListingsClient() {
   const searchParams = useSearchParams();
+  const { isArabic, locale } = useLocale();
   const initialQuery = searchParams.get("q") ?? "";
   const initialNeighborhood = searchParams.get("neighborhood") ?? "all";
   const initialType = searchParams.get("type") ?? "all";
@@ -22,13 +30,7 @@ export function ListingsClient() {
     const q = query.trim().toLowerCase();
 
     return venues.filter((venue) => {
-      const matchesQuery =
-        !q ||
-        [venue.name, venue.shortDescription, venue.cuisine, venue.neighborhood, ...venue.tags]
-          .join(" ")
-          .toLowerCase()
-          .includes(q);
-
+      const matchesQuery = !q || getVenueSearchText(venue).includes(q);
       const matchesNeighborhood = neighborhood === "all" || venue.neighborhood === neighborhood;
       const matchesType = type === "all" || venue.type === type;
       const matchesPrice = price === "all" || venue.priceRange === price;
@@ -38,14 +40,15 @@ export function ListingsClient() {
   }, [neighborhood, price, query, type]);
 
   const activeFilters = [neighborhood, type, price].filter((value) => value !== "all").length + (query ? 1 : 0);
+  const activeNeighborhood = neighborhoods.find((item) => item.slug === neighborhood);
 
   return (
     <div className="space-y-8">
-      <div className="surface-card rounded-[2rem] p-5 sm:p-6">
-        <div className="mb-5 flex items-center justify-between gap-4">
+      <div className="surface-card liquid-shell rounded-[2rem] p-5 sm:p-6">
+        <div className="mb-5 flex flex-wrap items-center justify-between gap-4">
           <div className="inline-flex items-center gap-2 text-sm font-semibold text-[var(--muted)]">
             <Filter className="size-4" />
-            Search and filter
+            {isArabic ? "البحث والتصفية" : "Search and filter"}
           </div>
           <button
             type="button"
@@ -55,10 +58,10 @@ export function ListingsClient() {
               setType(initialType);
               setPrice(initialPrice);
             }}
-            className="inline-flex items-center gap-2 rounded-full px-3 py-2 text-sm font-semibold text-[var(--green)] transition hover:bg-white/70"
+            className="nav-pill nav-pill-compact"
           >
             <RotateCcw className="size-4" />
-            Reset
+            {isArabic ? "إعادة الضبط" : "Reset"}
           </button>
         </div>
 
@@ -66,7 +69,7 @@ export function ListingsClient() {
           <input
             value={query}
             onChange={(event) => setQuery(event.target.value)}
-            placeholder="Search Marrakech venues"
+            placeholder={isArabic ? "ابحث داخل أماكن مراكش" : "Search Marrakech venues"}
             className="field-input"
           />
 
@@ -75,22 +78,22 @@ export function ListingsClient() {
             onChange={(event) => setNeighborhood(event.target.value)}
             className="field-select"
           >
-            <option value="all">All neighborhoods</option>
+            <option value="all">{isArabic ? "كل الأحياء" : "All neighborhoods"}</option>
             {neighborhoods.map((item) => (
               <option key={item.slug} value={item.slug}>
-                {item.name}
+                {getLocalizedString(item.name, locale)}
               </option>
             ))}
           </select>
 
           <select value={type} onChange={(event) => setType(event.target.value)} className="field-select">
-            <option value="all">Restaurant + café</option>
-            <option value="restaurant">Restaurant</option>
-            <option value="cafe">Café</option>
+            <option value="all">{isArabic ? "مطاعم + مقاهٍ" : "Restaurant + café"}</option>
+            <option value="restaurant">{isArabic ? "مطعم" : "Restaurant"}</option>
+            <option value="cafe">{isArabic ? "مقهى" : "Café"}</option>
           </select>
 
           <select value={price} onChange={(event) => setPrice(event.target.value)} className="field-select">
-            <option value="all">All prices</option>
+            <option value="all">{isArabic ? "كل الأسعار" : "All prices"}</option>
             <option value="$">$</option>
             <option value="$$">$$</option>
             <option value="$$$">$$$</option>
@@ -98,14 +101,23 @@ export function ListingsClient() {
         </div>
       </div>
 
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex flex-col gap-4 rounded-[2rem] border border-white/60 bg-white/45 p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.85)] backdrop-blur-xl sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <div className="text-sm text-[var(--muted)]">Preview results</div>
+          <div className="text-sm text-[var(--muted)]">{isArabic ? "نتائج المعاينة" : "Preview results"}</div>
           <div className="display-font text-3xl font-semibold tracking-[-0.04em] text-[var(--ink)]">
-            {filtered.length} venues {activeFilters ? `• ${activeFilters} active filter${activeFilters > 1 ? "s" : ""}` : ""}
+            {filtered.length} {isArabic ? "مكان" : "venues"}
+            {activeFilters ? ` • ${activeFilters} ${isArabic ? "فلتر نشط" : `active filter${activeFilters > 1 ? "s" : ""}`}` : ""}
           </div>
         </div>
-        <div className="verified-pill">Sample dataset • live verification comes next</div>
+        <div className="flex flex-wrap gap-2">
+          <span className="verified-pill">
+            <Sparkles className="size-4" />
+            {isArabic ? "بحث بالعربية والإنجليزية" : "Arabic + English search"}
+          </span>
+          {activeNeighborhood ? (
+            <span className="tag-chip">{formatNeighborhood(activeNeighborhood.slug, locale)}</span>
+          ) : null}
+        </div>
       </div>
 
       {filtered.length ? (
@@ -116,7 +128,9 @@ export function ListingsClient() {
         </div>
       ) : (
         <div className="surface-card rounded-[2rem] p-8 text-sm leading-7 text-[var(--muted)]">
-          No matches yet. Try a different neighborhood, type, or keyword.
+          {isArabic
+            ? "لا توجد نتائج الآن. جرّب كلمة أخرى أو حيًا مختلفًا أو نوع مكان مختلفًا."
+            : "No matches yet. Try a different neighborhood, type, or keyword."}
         </div>
       )}
     </div>
