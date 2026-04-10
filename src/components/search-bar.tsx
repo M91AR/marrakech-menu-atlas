@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Search, Sparkles } from "lucide-react";
+import { ArrowUpRight, Search } from "lucide-react";
 import { useLocale } from "@/components/locale-provider";
 
 export function SearchBar({ compact = false }: { compact?: boolean }) {
@@ -19,7 +19,7 @@ export function SearchBar({ compact = false }: { compact?: boolean }) {
   return (
     <form
       onSubmit={submit}
-      className={`surface-card search-shell flex w-full flex-col gap-3 rounded-[2rem] p-3 sm:flex-row ${
+      className={`surface-card search-shell flex w-full flex-col gap-3 rounded-[1.5rem] p-3 sm:flex-row ${
         compact ? "max-w-3xl" : "max-w-4xl"
       }`}
     >
@@ -31,16 +31,16 @@ export function SearchBar({ compact = false }: { compact?: boolean }) {
           onChange={(event) => setQuery(event.target.value)}
           placeholder={
             isArabic
-              ? "ابحث عن برنش، روف توب، قهوة، المدينة..."
-              : "Search brunch, rooftop, coffee, Medina..."
+              ? "برنش، روف توب، قهوة، جيليز، المدينة..."
+              : "Brunch, rooftop, coffee, Gueliz, Medina..."
           }
           className="field-input search-input"
         />
       </label>
 
-      <button type="submit" className="btn-primary h-[3.55rem] px-6 text-sm sm:px-7">
-        <Sparkles className="size-4" />
-        {isArabic ? "استكشف مراكش" : "Explore Marrakech"}
+      <button type="submit" className="btn-primary h-[3.35rem] px-6 text-sm sm:px-7">
+        <ArrowUpRight className="size-4" />
+        {isArabic ? "ابدأ البحث" : "Search the guide"}
       </button>
     </form>
   );
